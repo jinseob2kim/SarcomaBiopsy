@@ -60,6 +60,7 @@ out$result_biopsy_postop<-c[["병리결과\r\n\r\n0. WD Liposarcoma\r\n1. DD Lip
 
 #Patients survival rate-death,day-FU
 out$death<-as.integer(c[["사망여부\r\n\r\n0.Alive\r\n1.Dead\r\n2.Unknown.y"]])
+out$death <- ifelse(out$death == 2, NA, out$death)        ## Death 2 -> NA 로 수정.
 out$day_FU<-as.numeric(c[["마지막 f/u\r\n\r\ndd-mm-yyyy"]]-c[["수술날짜\r\n\r\ndd-mm-yyyy"]])
 #Q8 : ""는 [[]]에 쓰고 조건문에서는 ``를 쓰는 것일까..
 #A8 : 같은 거임. 그냥 여러 방법 보여줄 목적으로... 띄어쓰기 있을 때 $ 쓰려면 ``로 묶어야 함. 
@@ -107,6 +108,7 @@ out$Neoadjuvant<-as.integer(out$RTx_preop|out$Chemo_preop)
 
 #추가할 항목들
 out$meta_liver<-c[["Liver metastasis\r\n\r\n0. No\r\n1. Yes"]]
+out$meta_liver <- ifelse(out$meta_liver == 3, NA, out$meta_liver)   ## 3인 것 발견. NA로 수정
 out$meta_lung<-c[["Lung metastasis\r\n\r\n0. No\r\n1. Yes"]]
 #Q13 : bone이랑 abdominal은 ppt에 없는데 일단 하신건가요??
 #A13 : ㅇㅇ 그냥 추가한거임.
