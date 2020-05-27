@@ -6,116 +6,136 @@ setwd("C:/Users/USER/Desktop/sarcoma/biopsy")
 a<-excel_sheets("SarcomaDataSheet.xlsx") %>% 
   lapply(function(x){read_excel("SarcomaDataSheet.xlsx",sheet=x,skip=2)})
 b<-a[[1]] %>% 
-  left_join(a[[2]],by="È¯ÀÚ¹øÈ£") %>% 
-  left_join(a[[3]],by="È¯ÀÚ¹øÈ£") %>% 
-  left_join(a[[4]],by="È¯ÀÚ¹øÈ£") %>% 
-  left_join(a[[5]],by="È¯ÀÚ¹øÈ£") %>% 
-  left_join(a[[6]],by="È¯ÀÚ¹øÈ£") %>% 
-  left_join(a[[7]],by="È¯ÀÚ¹øÈ£")
+  left_join(a[[2]],by="í™˜ìë²ˆí˜¸") %>% 
+  left_join(a[[3]],by="í™˜ìë²ˆí˜¸") %>% 
+  left_join(a[[4]],by="í™˜ìë²ˆí˜¸") %>% 
+  left_join(a[[5]],by="í™˜ìë²ˆí˜¸") %>% 
+  left_join(a[[6]],by="í™˜ìë²ˆí˜¸") %>% 
+  left_join(a[[7]],by="í™˜ìë²ˆí˜¸")
 
 b[["ECOG\r\n\r\n0/1/2/3/4"]][which(is.na(b[["ECOG\r\n\r\n0/1/2/3/4"]]))]<-"0"
 b[["EBL\r\n(ml)"]]<-ifelse(b[["EBL\r\n(ml)"]]=="UK",NA,as.numeric(b[["EBL\r\n(ml)"]]))
-b$Age<-as.numeric(b[["¼ö¼ú³¯Â¥\r\n\r\ndd-mm-yyyy"]]-b[["»ı³â¿ùÀÏ\r\n\r\ndd-mm-yyyy"]])/365.25
+b$Age<-as.numeric(b[["ìˆ˜ìˆ ë‚ ì§œ\r\n\r\ndd-mm-yyyy"]]-b[["ìƒë…„ì›”ì¼\r\n\r\ndd-mm-yyyy"]])/365.25
 
-#Q1 : ÇÔ¼ö·Î ³ª´²¼­ Â¥µµ µÇ³ª¿ë ¿¹¸¦ µé¸é ÀÌºÎºĞ ReadData.R, Method.R.. ÀÌ·¸°Ô..
-#Q2 : ºóµ¥ÀÌÅÍµé Áß¿¡¼­ ¿Ö ECOG, EBL ¸¸ ¸ÕÀú Ã³¸®Çß³ª¿ä?
-#Q3 : b[[º¯¼ö]]]¶û b$º¯¼ö¶û °°Àº °Ç°¡¿ä?
-#Q4 : b[[º¯¼ö]]°³³äÀº a[[½ÃÆ®¹øÈ£]]¶û ´Ù¸¥ ¿ø¸® °°Àºµ¥.... À½.. Çò°¥..
+#Q1 : í•¨ìˆ˜ë¡œ ë‚˜ëˆ ì„œ ì§œë„ ë˜ë‚˜ìš© ì˜ˆë¥¼ ë“¤ë©´ ì´ë¶€ë¶„ ReadData.R, Method.R.. ì´ë ‡ê²Œ.. 
+#A1 : ìƒê´€ì—†ê¸´í•œë° ë” ë³µì¡í•´ì§ˆê²ƒ ê°™ì€ ëŠë‚Œ? 
+#Q2 : ë¹ˆë°ì´í„°ë“¤ ì¤‘ì—ì„œ ì™œ ECOG, EBL ë§Œ ë¨¼ì € ì²˜ë¦¬í–ˆë‚˜ìš”?
+#A2 : ì´ìœ ì—†ìŒ, ê²°ì¸¡ì¹˜ ì²˜ë¦¬í• ê²Œ ë¨¼ì € ë³´ì—¬ì„œ ê·¸ëƒ¥..
+#Q3 : b[[ë³€ìˆ˜]]]ë‘ b$ë³€ìˆ˜ë‘ ê°™ì€ ê±´ê°€ìš”?
+#A3 : b[["ë³€ìˆ˜"]] ë‘ b$ë³€ìˆ˜ ë‘ ê°™ìŒ. ì „ìëŠ” list í›„ìëŠ” data.frame ìŠ¤íƒ€ì¼. data.frameì€ listì´ê¸°ë„ í•´ì„œ, ë‘ ê°€ì§€ ë°©ë²•ì´ ë‹¤ í†µí•˜ëŠ” ê²ƒì„.
+#Q4 : b[[ë³€ìˆ˜]]ê°œë…ì€ a[[ì‹œíŠ¸ë²ˆí˜¸]]ë‘ ë‹¤ë¥¸ ì›ë¦¬ ê°™ì€ë°.... ìŒ.. í—·ê°ˆ..
+#A4 : ë‘˜ë‹¤ listì—ì„œ ì“°ëŠ” ê°œë…ì„, ì²˜ìŒ a ì½ê³  a ì‚´í´ë³´ë©´ List í˜•íƒœì„. (lapply í•¨ìˆ˜ëŠ” ê²°ê³¼ë¥¼ listë¡œ ë°˜í™˜).
 
 #Method------------------------------------------------------------------------------------------
 c<-b %>% 
-  filter(`Primary ¼ö¼ú¿©ºÎ\r\n\r\n0. Primary tumor\r\n1. Residual after incomplete resection\r\n2. Local recurrence.x`== 0,
-         `È¯ÀÚ¹øÈ£`!=21733889) %>% 
-  mutate(biopsy_preop_primary=as.integer(`¼ö¼ú Àü Biopsy\r\n\r\n0. None\r\n1. Primary site\r\n2. Local recurrence site\r\n3. Metastatic site`==1)
+  filter(`Primary ìˆ˜ìˆ ì—¬ë¶€\r\n\r\n0. Primary tumor\r\n1. Residual after incomplete resection\r\n2. Local recurrence.x`== 0,
+         `í™˜ìë²ˆí˜¸`!=21733889) %>% 
+  mutate(biopsy_preop_primary=as.integer(`ìˆ˜ìˆ  ì „ Biopsy\r\n\r\n0. None\r\n1. Primary site\r\n2. Local recurrence site\r\n3. Metastatic site`==1)
          ,type_needle=`Type of needle\r\n\r\n0. Core\r\n1. FNA\r\n2. N/A\r\n3. Unknown`) %>%
   mutate(type_needle=ifelse(type_needle==0,"Core needle",ifelse(type_needle==1,"FNA","Excisional biopsy")))
 
-out<-c %>% select(È¯ÀÚ¹øÈ£,Age,`¼ºº°\r\n\r\nM/F`,biopsy_preop_primary,type_needle)
+out<-c %>% select(í™˜ìë²ˆí˜¸,Age,`ì„±ë³„\r\n\r\nM/F`,biopsy_preop_primary,type_needle)
 names(out)[3]<-"Sex"
 
-# #2001³â 9¿ù ºÎÅÍ 2020³â 2¿ù±îÁö ¼ö¼úÇÑ retroperitoneal sarcoma È¯ÀÚ Áß
-# #primary tumor 274¸í (Ã¹¹øÂ° sheet H¿­ ¡°0¡±) #È¯ÀÚ¹øÈ£ 21733889 Á¦¿Ü 273¸í
+# #2001ë…„ 9ì›” ë¶€í„° 2020ë…„ 2ì›”ê¹Œì§€ ìˆ˜ìˆ í•œ retroperitoneal sarcoma í™˜ì ì¤‘
+# #primary tumor 274ëª… (ì²«ë²ˆì§¸ sheet Hì—´ â€œ0â€) #í™˜ìë²ˆí˜¸ 21733889 ì œì™¸ 273ëª…
 # out %>% nrow
-# #preOP biopsy of primary tumor 69 ¸í
-# #(µÎ¹øÂ° sheet O¿­ ¡°1¡±, È¯ÀÚ¹øÈ£ 21733889 Á¦¿Ü) vs non-biopsy 204¸í ºñ±³ (µÎ¹øÂ° sheet O¿­ ³ª¸ÓÁö)
+# #preOP biopsy of primary tumor 69 ëª…
+# #(ë‘ë²ˆì§¸ sheet Oì—´ â€œ1â€, í™˜ìë²ˆí˜¸ 21733889 ì œì™¸) vs non-biopsy 204ëª… ë¹„êµ (ë‘ë²ˆì§¸ sheet Oì—´ ë‚˜ë¨¸ì§€)
 # out %>% filter(biopsy_preop_primary==TRUE) %>% nrow
 # out %>% filter(biopsy_preop_primary==FALSE) %>% nrow
-# #Core needle 62¸í (µÎ¹øÂ° sheet P¿­ ¡°0¡±)
+# #Core needle 62ëª… (ë‘ë²ˆì§¸ sheet Pì—´ â€œ0â€)
 # out %>% filter(type_needle=="Core needle",biopsy_preop_primary==TRUE) %>% nrow
-# #FNA 4¸í (µÎ¹øÂ° sheet P¿­ ¡°1¡±)
+# #FNA 4ëª… (ë‘ë²ˆì§¸ sheet Pì—´ â€œ1â€)
 # out %>% filter(type_needle=="FNA") %>% nrow
-# #Excisional biopsy 3¸í (µÎ¹øÂ° sheet P¿­ ¡°2¡±¿Í ¡°3¡± 4¸í Áß 21733889Á¦¿Ü)
+# #Excisional biopsy 3ëª… (ë‘ë²ˆì§¸ sheet Pì—´ â€œ2â€ì™€ â€œ3â€ 4ëª… ì¤‘ 21733889ì œì™¸)
 # out %>% filter(type_needle=="Excisional biopsy",biopsy_preop_primary==1) %>% nrow
 
 #Outcome------------------------------------------------------------------------------------------
 #Biopsy accuracy-result_biopsy_preop,result_biopsy_postop
-out$result_biopsy_preop<-c[["preOP Bx. °á°ú\r\n\r\n0. WD \r\n1. DD \r\n2. Pleomorphic \r\n3. LMS\r\n4. MPNST\r\n5. Solitary fibrous tumor\r\n6. PEComa\r\n7. Other"]]
-out$result_biopsy_postop<-c[["º´¸®°á°ú\r\n\r\n0. WD Liposarcoma\r\n1. DD Liposarcoma\r\n2. Pleomorphic Liposarcoma\r\n3. Leiomyosarcoma\r\n4. MPNST\r\n5. Solitary fibrous tumor\r\n6. PEComa\r\n7. Other.y"]]
-#Q6 : º´¸®°á°ú º¯¼ö°¡ sheet 1 ¿¡ ÇÏ³ª ´õÀÖ´Âµ¥.. °ªÀÌ ¿ÏÀüÈ÷ ÀÏÄ¡ÇØ¿ä. Áß¿äÇÏÁö ¾ÊÀ» ¼öµµ. °á±¹ result_biopsy_postop ¶û result_biopsy¶û °°Àº°Å ¾Æ´Ñ°¡¿ë?
+out$result_biopsy_preop<-c[["preOP Bx. ê²°ê³¼\r\n\r\n0. WD \r\n1. DD \r\n2. Pleomorphic \r\n3. LMS\r\n4. MPNST\r\n5. Solitary fibrous tumor\r\n6. PEComa\r\n7. Other"]]
+out$result_biopsy_postop<-c[["ë³‘ë¦¬ê²°ê³¼\r\n\r\n0. WD Liposarcoma\r\n1. DD Liposarcoma\r\n2. Pleomorphic Liposarcoma\r\n3. Leiomyosarcoma\r\n4. MPNST\r\n5. Solitary fibrous tumor\r\n6. PEComa\r\n7. Other.y"]]
+#Q6 : ë³‘ë¦¬ê²°ê³¼ ë³€ìˆ˜ê°€ sheet 1 ì— í•˜ë‚˜ ë”ìˆëŠ”ë°.. ê°’ì´ ì™„ì „íˆ ì¼ì¹˜í•´ìš”. ì¤‘ìš”í•˜ì§€ ì•Šì„ ìˆ˜ë„. ê²°êµ­ result_biopsy_postop ë‘ result_biopsyë‘ ê°™ì€ê±° ì•„ë‹Œê°€ìš©?
+#A6 : ã…‡ã…‡ ì™„ì „ ê°™ì€ ë³€ìˆ˜ê°€ ë‹¤ë¥¸ ì—‘ì…€ sheetì— ìˆì„ ìˆ˜ ìˆìŒ. ì—°êµ¬ì§„ì´ ì‰½ê²Œ ë³´ê¸° ìœ„í•´ì„œ ì¤‘ë³µìœ¼ë¡œ ë„£ì€ê±°ì„. postopë‘ ê·¸ëƒ¥ì´ë‘ ê°™ì€ë³€ìˆ˜ ë§ë„¤. postë§Œ ë‚¨ê¸°ê³  ë‚˜ë¨¸ì§€ëŠ” ì§€ì›Œë„ ë ë“¯.
 
 #Patients survival rate-death,day-FU
-out$death<-as.integer(c[["»ç¸Á¿©ºÎ\r\n\r\n0.Alive\r\n1.Dead\r\n2.Unknown.y"]])
-out$day_FU<-as.numeric(c[["¸¶Áö¸· f/u\r\n\r\ndd-mm-yyyy"]]-c[["¼ö¼ú³¯Â¥\r\n\r\ndd-mm-yyyy"]])
-#Q8 : ""´Â [[]]¿¡ ¾²°í Á¶°Ç¹®¿¡¼­´Â ``¸¦ ¾²´Â °ÍÀÏ±î..
+out$death<-as.integer(c[["ì‚¬ë§ì—¬ë¶€\r\n\r\n0.Alive\r\n1.Dead\r\n2.Unknown.y"]])
+out$day_FU<-as.numeric(c[["ë§ˆì§€ë§‰ f/u\r\n\r\ndd-mm-yyyy"]]-c[["ìˆ˜ìˆ ë‚ ì§œ\r\n\r\ndd-mm-yyyy"]])
+#Q8 : ""ëŠ” [[]]ì— ì“°ê³  ì¡°ê±´ë¬¸ì—ì„œëŠ” ``ë¥¼ ì“°ëŠ” ê²ƒì¼ê¹Œ..
+#A8 : ê°™ì€ ê±°ì„. ê·¸ëƒ¥ ì—¬ëŸ¬ ë°©ë²• ë³´ì—¬ì¤„ ëª©ì ìœ¼ë¡œ... ë„ì–´ì“°ê¸° ìˆì„ ë•Œ $ ì“°ë ¤ë©´ ``ë¡œ ë¬¶ì–´ì•¼ í•¨. 
 
 #Local recurrence free survival rate-recur_local,recur_site,recur_day
-out$recur_local<-c[["Àç¹ß#1\r\n\r\n0: ¹«\r\n1: À¯"]]
+out$recur_local<-c[["ì¬ë°œ#1\r\n\r\n0: ë¬´\r\n1: ìœ "]]
 out$recur_site<-c$`Site of local recurrence`
-#Q9 : À§¿¡ µÎ ÁÙÀº ¿Ö c[[]], c$ ÀÌ·¸°Ô ´Ù¸£°Ô ¾²³ª¿ä??
+#Q9 : ìœ„ì— ë‘ ì¤„ì€ ì™œ c[[]], c$ ì´ë ‡ê²Œ ë‹¤ë¥´ê²Œ ì“°ë‚˜ìš”??
+#A9 : ë§ˆì°¬ê°€ì§€ë¡œ ê·¸ëƒ¥ ì‹¤ìŠµìš©
 out$recur_site<-ifelse(out$recur_site=="6",NA,out$recur_site)
 out$recur_day<-ifelse(out$recur_local==1,
-                      as.numeric(as.Date(as.integer(c[["Date of local recurrence"]]),origin="1899-12-30")-as.Date(c[["¼ö¼ú³¯Â¥\r\n\r\ndd-mm-yyyy"]])),
-                      as.numeric(c[["¸¶Áö¸· f/u\r\n\r\ndd-mm-yyyy"]]-c[["¼ö¼ú³¯Â¥\r\n\r\ndd-mm-yyyy"]]))
-#Q18 : out$recur_day °á°ú À½¼ö ³ª¿À´Â °ÍµéÀº ¾îÂ¼ÁÒ..
-#Q15 : pptÀÇ Sarcomatosis patter ´Â site of local recurrenceÀÇ 4. sarcomatosis ¶û ´Ù¸¥°Ç°¡¿ä? ¸¸¾à sarcomatosis patternÀÇ ¿ÀÅ¸ÀÎ°Å¸é.. 
+                      as.numeric(as.Date(as.integer(c[["Date of local recurrence"]]),origin="1899-12-30")-as.Date(c[["ìˆ˜ìˆ ë‚ ì§œ\r\n\r\ndd-mm-yyyy"]])),
+                      as.numeric(c[["ë§ˆì§€ë§‰ f/u\r\n\r\ndd-mm-yyyy"]]-c[["ìˆ˜ìˆ ë‚ ì§œ\r\n\r\ndd-mm-yyyy"]]))
+#Q18 : out$recur_day ê²°ê³¼ ìŒìˆ˜ ë‚˜ì˜¤ëŠ” ê²ƒë“¤ì€ ì–´ì©Œì£ ..
+#A18 : ì´ê±´ ë°ì´í„° ì˜¤ë¥˜ì¸ë“¯, ì¬ë°œë‚ ì§œê°€ ìˆ˜ìˆ ë‚ ì§œë³´ë‹¤ ë¨¼ì €ì´ê±°ë‚˜, ë§ˆì§€ë§‰ F/U ë‚ ì§œê°€ ìˆ˜ìˆ ë‚ ì§œë³´ë‹¤ ë¨¼ì €ë„¤.. ì´ê±´ êµìˆ˜ë‹˜ê»˜ ì—¬ì­¤ë³¼ê²Œ
+#Q15 : pptì˜ Sarcomatosis patter ëŠ” site of local recurrenceì˜ 4. sarcomatosis ë‘ ë‹¤ë¥¸ê±´ê°€ìš”? ë§Œì•½ sarcomatosis patternì˜ ì˜¤íƒ€ì¸ê±°ë©´.. 
+#A15 : ê°™ì€ê±°ì„. sarcomatosis pattern ë§Œ ë”°ë¡œ ë³´ê³  ì‹¶ìœ¼ì‹  ê±´ë°, ì¼ë‹¨ local recur ë³€ìˆ˜ê°€ ìˆìœ¼ë‹ˆ ì¶”ê°€ë¡œ í•  ê±´ ì—†ì„ë“¯.
 
 #RT-RTdose,RTx_tissue_expander
-out$RTx_dose<-c[["RT dose\r\n(Gy)"]] #Q10 : ¿Ö ÀÌ º¯¼ö´Â ¾ÈÇÏ½Å°Ç°¡¿ä??
+out$RTx_dose<-c[["RT dose\r\n(Gy)"]] 
+#Q10 : ì™œ ì´ ë³€ìˆ˜ëŠ” ì•ˆí•˜ì‹ ê±´ê°€ìš”?? 
+#A10 : ë„£ì€ ì¤„ ì•Œì•˜ëŠ”ë° ëª°ëë‹¤. ë‚´ê°€ ë¹¼ë¨¹ì€ê±°ì„..
 cond1<-c[["RT timing\r\n\r\n0.None \r\n1.Preop only\r\n2. IORT only\r\n3.Preop + IORT\r\n4.Postop only\r\n5.Preop + postop boost\r\n6.IORT + postop"]] %in% c("1","5")
-cond2<-(c[["RT timing\r\n\r\n0.None \r\n1.Preop only\r\n2. IORT only\r\n3.Preop + IORT\r\n4.Postop only\r\n5.Preop + postop boost\r\n6.IORT + postop"]]=="4") & (c[["Tisuue expander insertion \r\nÀ¯¹Â\r\n\r\n0. No\r\n1. Yes"]]=="1")
+cond2<-(c[["RT timing\r\n\r\n0.None \r\n1.Preop only\r\n2. IORT only\r\n3.Preop + IORT\r\n4.Postop only\r\n5.Preop + postop boost\r\n6.IORT + postop"]]=="4") & (c[["Tisuue expander insertion \r\nìœ ë®¤\r\n\r\n0. No\r\n1. Yes"]]=="1")
 out$RTx_tissue_expander<-as.integer(cond1|cond2)
-#Q16 : º¯¼ö¸¦ ÀÌ·¸°Ô ÀúÀåÇÏ´Â°Ô ÀÇ¹Ì°¡ ¸ÂÀ»Áö..? preop¸¦ Çß°Å³ª postop&&tissueexpander ÀÎ °æ¿ì¸¦ º¸´Â °Å´Ï±ñ..
-#tissue expander´Â Á¦°¡ ¾Ë±â·Î´Â.. ¾Ï µîÀ» ÀıÁ¦ ÈÄ¿¡ ³ªÁß¿¡ Á¶Á÷ reconÀ» À§ÇØ Ç³¼±°°Àº°É ³Ö¾îµÎ´Â ±â¹ı ¾Æ´Ñ°¡¿ë? html ÆÄÀÏ ¸Ç ¾Æ·§ÁÙ¿¡ ¹» ÀÇ¹ÌÇÏ½Å °ÇÁö ¸ğ¸£°Ú¾î¿ä!
-
+#Q16 : ë³€ìˆ˜ë¥¼ ì´ë ‡ê²Œ ì €ì¥í•˜ëŠ”ê²Œ ì˜ë¯¸ê°€ ë§ì„ì§€..? preopë¥¼ í–ˆê±°ë‚˜ postop&&tissueexpander ì¸ ê²½ìš°ë¥¼ ë³´ëŠ” ê±°ë‹ˆê¹..
+#tissue expanderëŠ” ì œê°€ ì•Œê¸°ë¡œëŠ”.. ì•” ë“±ì„ ì ˆì œ í›„ì— ë‚˜ì¤‘ì— ì¡°ì§ reconì„ ìœ„í•´ í’ì„ ê°™ì€ê±¸ ë„£ì–´ë‘ëŠ” ê¸°ë²• ì•„ë‹Œê°€ìš©? html íŒŒì¼ ë§¨ ì•„ë«ì¤„ì— ë­˜ ì˜ë¯¸í•˜ì‹  ê±´ì§€ ëª¨ë¥´ê² ì–´ìš”!
+#A16 : preop ê¸°ì¤€ì´ cond1 ì´ê³  postop&tissueexpander ê¸°ì¤€ì„ cond2 ë¡œ ì €ì¥í•œê±°ì„. ì´ìƒí•œì  ìˆìœ¼ë©´ ì•Œë ¤ì£¼ì…”
+#      HTML ë§ˆì§€ë§‰ì¤„ì€, PPT 14p ì˜ radiotherapy ë³€ìˆ˜ì •ì˜ê°€ RTx_tissue_expander ë‘ ë™ì¼í•œ ê²ƒìœ¼ë¡œ ë³´ì¸ë‹¤ëŠ” ëœ».
+       
 
 #Result------------------------------------------------------------------------------------------
-#º´¸®°á°ú
-out$result_biopsy<-c[["º´¸®°á°ú\r\n\r\n0. WD Liposarcoma\r\n1. DD Liposarcoma\r\n2. Pleomorphic Liposarcoma\r\n3. Leiomyosarcoma\r\n4. MPNST\r\n5. Solitary fibrous tumor\r\n6. PEComa\r\n7. Other.y"]]
+#ë³‘ë¦¬ê²°ê³¼
+out$result_biopsy<-c[["ë³‘ë¦¬ê²°ê³¼\r\n\r\n0. WD Liposarcoma\r\n1. DD Liposarcoma\r\n2. Pleomorphic Liposarcoma\r\n3. Leiomyosarcoma\r\n4. MPNST\r\n5. Solitary fibrous tumor\r\n6. PEComa\r\n7. Other.y"]]
 #Neoadjuvant therapy
-out$RTx_preop<-as.integer(c[["¼ö¼úÀü \r\nRT ¿©ºÎ\r\n\r\n0.No\r\n1.Yes"]])
-out$Chemo_preop<-as.integer(c[["¼ö¼úÀü \r\nChemo ¿©ºÎ\r\n\r\n0.No\r\n1.Yes"]])
+out$RTx_preop<-as.integer(c[["ìˆ˜ìˆ ì „ \r\nRT ì—¬ë¶€\r\n\r\n0.No\r\n1.Yes"]])
+out$Chemo_preop<-as.integer(c[["ìˆ˜ìˆ ì „ \r\nChemo ì—¬ë¶€\r\n\r\n0.No\r\n1.Yes"]])
 out$Neoadjuvant<-as.integer(out$RTx_preop|out$Chemo_preop)
-#Q11 : ppt¿¡ ÀÖ´Â A+B´Â º¸Åë and°¡ ¾Æ´Ï°í or ÀÇ¹Ì?
-#Q12 : excel ¿­ÀÌ ÇÏ³ª¾¿ ¾È ¸Â´Â°Å´Â ½ÜÀÌ 1¿­À» Ãß°¡ÇÏ¼Å¼­ ±×·±°Ç°¡¿ä ¾Æ´Ô ¿ø·¡?? 1¿­ÀÇ Æ¯º°ÇÑ ÇÊ¿ä¼º?!
-#Q13 : '¼ö¼úÀüchemo¿©ºÎ'columnÀÌ¶û 'neoadjuvant chemo¿©ºÎ'column ¿ÏÀü µ¿ÀÏÇÕ´Ï´Ù.
+#Q11 : pptì— ìˆëŠ” A+BëŠ” ë³´í†µ andê°€ ì•„ë‹ˆê³  or ì˜ë¯¸?
+#A11 : ê·¸ëŸ°ë“¯. ì´ê²½ìš°ë„ ìˆ˜ìˆ ì „ì— ë­”ê°€ í•˜ëŠ” ê²ƒì„ ì˜ë¯¸í•˜ëŠ” ê²ƒìœ¼ë¡œ ìƒê°í•¨. ëª¨ì„ ë•Œ êµìˆ˜ë‹˜ê»˜ ì§ˆë¬¸í•´ì„œ í™•ì¸í•˜ì.
+#Q12 : excel ì—´ì´ í•˜ë‚˜ì”© ì•ˆ ë§ëŠ”ê±°ëŠ” ìŒ¤ì´ 1ì—´ì„ ì¶”ê°€í•˜ì…”ì„œ ê·¸ëŸ°ê±´ê°€ìš” ì•„ë‹˜ ì›ë˜?? 1ì—´ì˜ íŠ¹ë³„í•œ í•„ìš”ì„±?!
+#A12 : êµìˆ˜ë‹˜ì´ ì—‘ì…€ ì‘ì—…í•˜ì‹œë‹¤ê°€ í•˜ë‚˜ì”© ë°€ë ¸ë‹¤ê³  ì•Œë ¤ì£¼ì…¨ìŒ!
+#Q13 : 'ìˆ˜ìˆ ì „chemoì—¬ë¶€'columnì´ë‘ 'neoadjuvant chemoì—¬ë¶€'column ì™„ì „ ë™ì¼í•©ë‹ˆë‹¤.
+#A13 : ã…‡ã…‡ ë‘˜ì¤‘ í•˜ë‚˜ë§Œ ì“°ë©´ ë¨.
 
-#Ãß°¡ÇÒ Ç×¸ñµé
+#ì¶”ê°€í•  í•­ëª©ë“¤
 out$meta_liver<-c[["Liver metastasis\r\n\r\n0. No\r\n1. Yes"]]
 out$meta_lung<-c[["Lung metastasis\r\n\r\n0. No\r\n1. Yes"]]
-#Q13 : boneÀÌ¶û abdominalÀº ppt¿¡ ¾ø´Âµ¥ ÀÏ´Ü ÇÏ½Å°Ç°¡¿ä??
+#Q13 : boneì´ë‘ abdominalì€ pptì— ì—†ëŠ”ë° ì¼ë‹¨ í•˜ì‹ ê±´ê°€ìš”??
+#A13 : ã…‡ã…‡ ê·¸ëƒ¥ ì¶”ê°€í•œê±°ì„.
 out$meta_bm<-c[["Bone metastasis\r\n\r\n0. No\r\n1. Yes"]]
 out$meta_abd<-c[["Intra-abdominal metastasis\r\n\r\n0. No\r\n1. Yes"]]
-out$multifocal<-c[["Mutifocality ¿©ºÎ\r\n\r\n0. No\r\n1. Yes"]]
+out$multifocal<-c[["Mutifocality ì—¬ë¶€\r\n\r\n0. No\r\n1. Yes"]]
 
-#µ¿¹İÀıÁ¦ Àå±â¼ö
-#Q13 : info$resectionÀÌ ¾Æ´Ï°í info.resectionÀ¸·Î ÇÑ ÀÌÀ¯´Â ÇÏ³ª¸¸ ´Ù·ç´Â º¯¼ö¶ó¼­? °¡²û ÀÏºÎ º¯¼ö¸¸ out$A¸»°í out.A·Îµµ º¯¼ö°¡ Ã£¾ÆÁö´øµ¥.. ¿ÖÁÒ
-#Q14 : µ¿¹İÀıÁ¦ \r\nÀå±â ·Î ½ÃÀÛÇÏ´Â º¯¼ö°¡ »çÀÌ¿¡ 2°³ ÀÖ¾î¼­ Æ÷ÇÔ½ÃÄÑ¼­ ¼öÁ¤Çß½À´Ï´ç.
+#ë™ë°˜ì ˆì œ ì¥ê¸°ìˆ˜
+#Q13 : info$resectionì´ ì•„ë‹ˆê³  info.resectionìœ¼ë¡œ í•œ ì´ìœ ëŠ” í•˜ë‚˜ë§Œ ë‹¤ë£¨ëŠ” ë³€ìˆ˜ë¼ì„œ? ê°€ë” ì¼ë¶€ ë³€ìˆ˜ë§Œ out$Aë§ê³  out.Aë¡œë„ ë³€ìˆ˜ê°€ ì°¾ì•„ì§€ë˜ë°.. ì™œì£ 
+#A14 : `info.resection` ìì²´ê°€ ì´ë¦„ì´ê³  `.` ì€ ì˜ë¯¸ ì—†ìŒ. ë™ë°˜ì ˆì œ ê´€ë ¨ ì—´ë§Œ ê³¨ë¼ì„œ info.resectionì´ë¼ í•œ í›„, í–‰ë³„ë¡œ í•©í•˜ë©´ resection ìˆ˜ê°€ ë¨.
+#Q14 : ë™ë°˜ì ˆì œ \r\nì¥ê¸° ë¡œ ì‹œì‘í•˜ëŠ” ë³€ìˆ˜ê°€ ì‚¬ì´ì— 2ê°œ ìˆì–´ì„œ í¬í•¨ì‹œì¼œì„œ ìˆ˜ì •í–ˆìŠµë‹ˆë‹¹.
+#A14 : OK
 info.resection<-c %>% 
-  select(starts_with("µ¿¹İÀıÁ¦")) %>% 
+  select(starts_with("ë™ë°˜ì ˆì œ")) %>% 
   mutate_at(1:25,as.integer) %>% 
   mutate_at(26,function(x){as.integer(!is.na(x))})
 info.resection[26]
 out$num_resected_organ<-rowSums(info.resection,na.rm=T)
 
 #RT
-out$RTx_total<-as.integer(c[["¼ö¼ú ÀüÈÄ RT ¿©ºÎ\r\n\r\n0.No\r\n1.Yes"]])
+out$RTx_total<-as.integer(c[["ìˆ˜ìˆ  ì „í›„ RT ì—¬ë¶€\r\n\r\n0.No\r\n1.Yes"]])
 #Chemo
-out$Chemo_postop<-as.integer(c[["Adjuvant chemo ¿©ºÎ\r\n\r\n0.No\r\n1.Yes"]])
+out$Chemo_postop<-as.integer(c[["Adjuvant chemo ì—¬ë¶€\r\n\r\n0.No\r\n1.Yes"]])
 out$Chemo_both<-as.integer(out$Chemo_preop|out$Chemo_postop)
 
 #Risk factor analysis for tumor recurrence
-#Q17 : tumor size º¯¼ö ºüÁ®¼­ ³Ö¾ú¾î¿ä
-out$tumor_size<-c[["Á¾¾ç Å©±â\r\n(Tumor size, mm)\r\n´Ù¹ß¼ºÀÎ °æ¿ì largest tumor size"]]
+#Q17 : tumor size ë³€ìˆ˜ ë¹ ì ¸ì„œ ë„£ì—ˆì–´ìš”
+#A17 : OK
+out$tumor_size<-c[["ì¢…ì–‘ í¬ê¸°\r\n(Tumor size, mm)\r\në‹¤ë°œì„±ì¸ ê²½ìš° largest tumor size"]]
 #resection margin
 out$resection_margin<-c[["Surgical margins\r\n\r\n0. R0/R1\r\n1. R2\r\n2. Not available"]]
 out$resection_margin<-ifelse(out$resection_margin=="2",NA,out$resection_margin)
@@ -128,7 +148,8 @@ out$FNCLCC_grade<-ifelse(out$FNCLCC_grade=="UK",NA,out$FNCLCC_grade)
 
 #------------------------------------------------------------------------------------------
 
-#Q5 : º¯¼öµé Å¬·¡½º ¼³Á¤Àº ¾ÈÇÏ³ª¿ë?
+#Q5 : ë³€ìˆ˜ë“¤ í´ë˜ìŠ¤ ì„¤ì •ì€ ì•ˆí•˜ë‚˜ìš©?
+#A5 : ë¶„ì„í•˜ë ¤ë©´ í•´ì•¼ ë¨. í•  ìˆ˜ ìˆìœ¼ë©´ ë¯¸ë¦¬ í•´ë³´ê³  ë‚´ê°€ í”¼ë“œë°± ì¤„ê²Œ.
 
 out %>% head
 out %>% summary
